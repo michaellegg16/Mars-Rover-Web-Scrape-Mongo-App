@@ -97,5 +97,7 @@ def scrape():
 
     mars['Hemispheres'] = hemi_data
 
+    browser.quit()
+
 
     return mars
