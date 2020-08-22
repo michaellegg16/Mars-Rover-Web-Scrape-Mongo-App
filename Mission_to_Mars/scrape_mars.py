@@ -3,10 +3,11 @@ from bs4 import BeautifulSoup
 from pprint import pprint
 import pandas as pd
 from selenium import webdriver
+from lxml import html
 import time
 
 def init_browser():
-    executable_path = {"executable_path": "/chromedriver/chromedriver"}
+    executable_path = {"executable_path": "../chromedriver/chromedriver"}
     return Browser("chrome", **executable_path, headless=False)
 
 def scrape():
@@ -18,15 +19,15 @@ def scrape():
     html = browser.html
     soup = BeautifulSoup(html, 'html.parser')
 
-    # text = soup.find('div', class_='list_text')
+    text = soup.find('div', class_='list_text')
 
-    title = soup.find('div', class_='content_title')
+    title = text.find('div', class_='content_title')
     clean_title = title.text.strip()
-    newsP = soup.find('div', class_='article_teaser_body').text
-    # clean_newsP = newsP.text.strip()
+    newsP = text.find('div', class_='article_teaser_body')
+    clean_newsP = newsP.text.strip()
 
-    mars['title'] = title
-    mars['paragraph'] = newsP
+    mars['title'] = clean_title
+    mars['paragraph'] = clean_newsP
 
     # Featured Image
     url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
@@ -45,15 +46,29 @@ def scrape():
     url = 'https://twitter.com/marswxreport?lang=en'
     browser.visit(url)
 
-    time.sleep(5)
+    # time.sleep(5)
 
     html = browser.html
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html)
 
-    mars_weather = soup.find('article', class_= "css-1dbjc4n r-1loqt21 r-16y2uox r-1wbh5a2 r-1udh08x r-1j3t67a r-o7ynqc r-6416eg")
-    mars_weather_text = mars_weather.text.strip()
+    mars_weather = soup.find("div", attrs={"class": "css-1dbjc4n r-18u37iz", "data-testid": "tweet"})
+    
+    # mars_weather = mars_weather.text
 
-    mars['Weather'] = mars_weather_text
+    mars['Weather'] = mars_weather
+
+    # mars_weather_tweet = mars_weather.find("p", "tweet-text").get_text()
+    # test = soup.find("span", class_= "css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0").text
+
+    # spans = soup.find_all('span')
+
+    # for span in spans:
+        # if 'sol' and 'low' and 'high' in span.text.lower():
+            # mars_weather = span.text
+            # mars['Weather'] = mars_weather
+            # break
+        # else:
+            # pass
 
     # Mars Facts
     url = 'https://space-facts.com/mars/'
@@ -76,28 +91,47 @@ def scrape():
 
     browser.visit(hemi_url)
 
+    # Create and empty list for the data
     hemi_data = []
+
+    # Find all the hemispheres and store them in a variable
     hems = soup.find_all('div', class_='item')
 
+
+    for description in descriptions:
+            link = description.a['href']
+            hemi_data.append(link)
+
+    # Base url
+    base = 'https://astrogeology.usgs.gov'
+
+    # Loop through each hemisphere and print the its image link
     for hem in hems:
-        hem_name = hem.h3.text
-        link = hem.a['href']
-        browser.visit(url + link)
+        hem_name = hem.find('h3').text
+        link = hem.find('a', 'href')
+        
+        browser.visit(base + link)
         soup = BeautifulSoup(browser.html, "html.parser")
-    
+        
         time.sleep(5)
+        
         image = soup.find('div', class_='downloads')
         imageLink = image.find('a', target='_blank')['href']
-    
+        
+        browser.back()
+        
         hem_info = {}
         hem_info['title'] = hem_name
         hem_info['img_url'] = imageLink
-    
+        
         hemi_data.append(hem_info)
+        print(imageLink)
+        
 
     mars['Hemispheres'] = hemi_data
 
-    browser.quit()
+    # mars['Hems'] = hems
 
+    browser.quit()
 
     return mars
