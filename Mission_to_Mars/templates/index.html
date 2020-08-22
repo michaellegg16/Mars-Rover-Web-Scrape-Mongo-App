@@ -27,24 +27,24 @@
                 <p>{{mars.paragraph | safe }}</p>
                 </br>
                 <h3>Facts</h3>
-                <p>{{mars.Mars_Facts | safe }}</p>
+                <p>{{mars.mars_Facts | safe }}</p>
         </div>
         
 
         <div class="row" id="Hemispheres">
             <div class="col-md-12">
-                {% for hemisphere in mars.hemisphere_images %}                
-                  </br>
-                  <div>
-                    <img width="400 px" height="400 px" src="{{mars.Hemispheres | safe }}">
-                  </div>
-        
-                  <div>
-                    <h4> {{mars.Title | safe }} </h4>
-                  </div>
-                {% endfor %}
-              </div>
-            </div>
+              <h3>{{mars.HemisphereNames[0] | safe}}</h3>
+              <img width="400 px" height="400 px" src="{{mars.HemisphereImgs[0] | safe }}">
+              
+              <h3>{{mars.HemisphereNames[1] | safe}}</h3>
+              <img width="400 px" height="400 px" src="{{mars.HemisphereImgs[1] | safe }}">
+              
+              <h3>{{mars.HemisphereNames[2] | safe}}</h3>
+              <img width="400 px" height="400 px" src="{{mars.HemisphereImgs[2] | safe }}">
+              
+              <h3>{{mars.HemisphereNames[3] | safe}}</h3>
+              <img width="400 px" height="400 px" src="{{mars.HemisphereImgs[3] | safe }}">                
+              
         </div>
     </div>    
 </body>
