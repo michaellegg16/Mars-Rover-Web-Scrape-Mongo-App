@@ -1,3 +1,5 @@
+# Import libraries
+
 from splinter import Browser
 from bs4 import BeautifulSoup
 from pprint import pprint
@@ -84,21 +86,6 @@ def scrape():
 
     mars['Weather'] = mars_weather
 
-    # mars_weather_tweet = mars_weather.find("p", "tweet-text").get_text()
-    # test = soup.find("span", class_= "css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0").text
-
-    # spans = soup.find_all('span')
-
-    # for span in spans:
-        # if 'sol' and 'low' and 'high' in span.text.lower():
-            # mars_weather = span.text
-            # mars['Weather'] = mars_weather
-            # break
-        # else:
-            # pass
-
-    # mars Facts
-
     # Next, use Pandas to scrape the facts table from the url provided
 
     # Set the url
@@ -133,12 +120,11 @@ def scrape():
     # Visit the new url
     browser.visit(hemi_url)
 
-    # Select the html and parse it
+    # Scrape the page into soup
     html = browser.html
     soup = BeautifulSoup(html, "html.parser")
 
-    # Create an empty list for the data
-    # hemi_data = []
+    # Create empty lists for the data
     hem_names = []
     hem_imgs = []
 
@@ -150,35 +136,47 @@ def scrape():
 
     # Loop through each hemisphere and print the its image link
     for hem in hems:
+
+        # Get the text for the Hemisphere name
         hem_name = hem.h3.text
+
+        # Get the link for the hemisphere
         link = hem.a['href']
         
+        # Visit the hemisphere link
         browser.visit(base + link)
+
+        # Scrape the page into soup
         soup = BeautifulSoup(browser.html, "html.parser")
         
         # time.sleep(5)
         
+        # Get the image link 
         image = soup.find('div', class_='downloads')
         imageLink = image.find('a', target='_blank')['href']
         
+        # Go back to the page with all the hemispheres
         browser.back()
         
+        # Create a dictionary for the information of each hemisphere
         hem_info = {}
+
+        # Store the hemisphere name in the dictionary
         hem_info['Hemisphere_name'] = hem_name
+
+        # Store the image url in the dictionary
         hem_info['img_url'] = imageLink
         
+        # Append the hemisphere name and image url to the hem_names and hem_imgs lists
         hem_names.append(hem_info['Hemisphere_name'])
         hem_imgs.append(hem_info['img_url'])
-        print(imageLink)
+        # print(imageLink)
 
-    browser.quit()
-        
-
+    # Store the hem_names and hem_imgs tables in the mars dictionary
     mars['HemisphereNames'] = hem_names
     mars['HemisphereImgs'] = hem_imgs
 
-    # mars['Hems'] = hems
-
+    # Close the browser
     browser.quit()
 
     return mars
