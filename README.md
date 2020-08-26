@@ -16,7 +16,7 @@
    
 * JPL Mars Space Images - Featured Image:
    * Visit the url for JPL Featured Space Image [here](https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars).
-   * Use splinter to navigate the site and find the image url for the current Featured Mars Image and assign the url string to a variable called `featured_image_url`.
+   * Use splinter to navigate the site and find the image url for the current Featured Mars Image and assign the url string to a variable called `image_path`.
    * Make sure to find the image url to the full size `.jpg` image.
    * Make sure to save a complete url string for this image.   
    
@@ -24,7 +24,7 @@
 
 * Mars Weather:
    * Visit the Mars Weather twitter account [here](https://twitter.com/marswxreport?lang=en) and scrape the latest Mars weather tweet from the page. 
-   * Save the tweet text for the weather report as a variable called `mars_weather`.
+   * Save the tweet text for the weather report as a variable called `mars_weather_tweet`.
    
 ![MarsWeather](https://github.com/michaellegg16/Mars-Rover-Web-Scrape-Mongo-App/blob/master/Mission_to_Mars/Screenshots/MarsWeather.png)
 
@@ -45,9 +45,27 @@
 ![Hemispheres](https://github.com/michaellegg16/Mars-Rover-Web-Scrape-Mongo-App/blob/master/Mission_to_Mars/Screenshots/HemisphereDictionary.png)
 
 
-#### Step 2 - 
+#### Step 2 - MongoDB and Flask Application
+
+* Use MongoDB with Flask templating to create a new HTML page that displays all of the information that was scraped from the URLs above.
     
-    
+* Converting the Jupyter notebook into a Python script called `scrape_mars.py` with a function called `scrape` that will execute all of the scraping code from above and return one Python dictionary containing all of the scraped data.
+
+* Next, create a route called `/scrape` that will import your `scrape_mars.py` script and call your `scrape` function.
+
+  * Store the return value in Mongo as a Python dictionary.
+
+* Create a root route `/` that will query your Mongo database and pass the mars data into an HTML template to display the data.
+
+* Create a template HTML file called `index.html` that will take the mars data dictionary and display all of the data in the appropriate HTML elements.
+
+![FinalApp]()
+
+
+
+### Instructions
+
+* 
     
     
     
